@@ -1,0 +1,116 @@
+---
+title: Fundamentals of LLMs
+---
+
+Steps in LLM:
+
+1. Text pre-processing
+2. Text representation
+3. Pre-training
+4. Tuning
+
+## 1. Text Pre-processing
+
+* Tokenisation
+* Remove stop words
+* Lemmatisation - mapping synonyms to a root word.
+
+## 2. Text Representation
+
+How to encode words as numbers in order for computational analysis. 2
+approaches:
+
+* Bag of words - using simple token frequency counts.
+* Word embeddings - assigning floating point values to words with similar
+meanings.
+
+## 3. Pre-training
+
+Takes 2 forms:
+
+* Next word prediction. Based on the previous tokens in a sentence, predict the
+likelihood of the next.
+* Masked language modelling. Essentially a cloze activity. 
+
+Modelling relationships between distant words in a sentence is challenging. A
+key development in the success of LLMs was the **transformer**, which allowed
+for modelling of relationships between distant words. 
+
+### Components of a Transformer
+
+```{mermaid}
+flowchart LR
+    A>Input] --> B
+    B(Pre-processing\n& Representation) --> C(Positional\nEncoding)
+    C --> D(Encoders)
+    D --> E(Decoders) --> F>Output]
+
+```
+
+The encoders annd decoders use an attention mechanism with a neural network to
+emphasise certain aspects of the language, allowing the modelling of long-range
+dependencies in the text. To read more about how this is achieved, see the
+paper [Attention is all you need](https://arxiv.org/html/1706.03762v7).
+
+### Attention Types
+
+There are 2 primary approaches to modelling attention:
+
+1. Self-attention
+2. Multi-head attention.
+
+To summarise the different approaches, we'll use the below prompt:
+
+
+Sure! Let's take a relatable input prompt related to a classroom scenario:
+
+> During a classroom discussion about renewable energy, the teacher asks the
+students to share their thoughts on the benefits and challenges of solar power.
+
+**Self-Attention:**
+
+Self-attention allows the model to weigh the importance of each word in the
+context of the entire sentence. In our prompt, self-attention would help the
+model understand the relationships between words like "classroom,"
+"discussion," "renewable energy," "benefits," "challenges," and "solar power."
+It would emphasize the connections between these words and how they contribute
+to the overall topic of the discussion. For example, it might focus more on
+"renewable energy" and "solar power" when generating responses, as they are
+central to the prompt.
+
+**Multi-Head Attention:**
+
+Multi-head attention allows the model to focus on different aspects of the
+input simultaneously. Each "head" of attention can learn to attend to different
+patterns or features in the data. In our prompt, multi-head attention might
+allow the model to simultaneously focus on different aspects of the discussion,
+such as the benefits of solar power, the challenges it poses, the students'
+opinions, and the teacher's guidance. This enables the model to capture
+multiple perspectives and nuances within the prompt, leading to a more
+comprehensive understanding and generation of responses. In summary,
+self-attention helps the model understand the relationships between words
+within the input sentence, while multi-head attention allows it to focus on
+different aspects of the input simultaneously, leading to a richer
+understanding of the prompt and more nuanced responses.
+
+## 4. Tuning
+
+The pre-training undertaken with LLMs at the moment is prohibitively expensive,
+requiring hundreds of thousands of cpus and tens of thousands of gpus over many
+months. 
+
+However, these general-purpose pre-trained models can be fine-tuned over a more
+focussed corpus for a fraction of the compute and time. 
+
+Tuning can be achieved by **transfer learning** techniques. Essentially,
+generalising rules from prior experience. The approach known as
+**n-shot learning** means we provide specified number of labelled exemplars to
+the model prior to asking for it to apply the rules to new observations.
+
+* zero-shot learning: No exemplars are provided.
+* one-shot learning: 1 example provided.
+* few-shot learning: Several examples provided.
+
+
+
+
