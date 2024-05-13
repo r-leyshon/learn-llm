@@ -1,3 +1,4 @@
+beautifulsoup4
 matplotlib
 nbclient # quarto render dependency
 nbformat # quarto render dependency
