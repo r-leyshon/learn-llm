@@ -1,4 +1,7 @@
 matplotlib
+nbclient # quarto render dependency
+nbformat # quarto render dependency
 pyprojroot
 scikit-learn
-shap
+torch
+transformers
