@@ -1,0 +1,87 @@
+---
+title: LLMs in Python
+jupyter: 
+  kernelspec:
+    name: "conda-env-llm-env-py"
+    language: "python"
+    display_name: "llm-env"
+---
+
+## Orientation
+
+Largely with Hugging Face's `transformers` package.
+
+```{python}
+#| warning: false
+from transformers import pipeline # relies on torch
+```
+
+### Text Classification
+
+![Toranaga San on tellyvisions](https://tellyvisions.org/sites/default/files/styles/hero__1070x485/public/2023-12/Shogun%20Hiroyuki%20Sanada.jpeg?h=722d8239&itok=4P2HrbGh)
+
+I've recently been watching Shōgun on Disney+. Here are some Google reviews to
+attempt to classify, I included a 5 star and 1 star review respectively.
+
+```{python}
+#| warning: false
+reviews = [""""Shogun" is a captivating TV series that offers a refreshing and
+unique storyline, making it a standout in today's television landscape. From
+its inception, it immerses viewers in a world that is both historically rich
+and artistically mesmerizing.
+
+One of the most compelling aspects of "Shogun" is its distinctiveness. In an
+era where many shows follow predictable patterns, "Shogun" breaks the mold with
+its innovative storytelling. It presents a narrative that is both engaging and
+unpredictable, keeping audiences on the edge of their seats throughout each
+episode.
+
+The cinematography and costume design in "Shogun" are nothing short of
+stunning. Every frame is a work of art, meticulously crafted to transport
+viewers to feudal Japan. The attention to detail in the costumes not only adds
+authenticity but also enhances the overall visual experience of the series.
+
+Beyond its aesthetic appeal, "Shogun" offers a glimpse into ancient Japanese
+culture, providing viewers with a rich tapestry of traditions, customs, and
+values. This cultural exploration is not only educational but also serves as a
+gateway to a deeper understanding and appreciation of history.
+
+Personally, "Shogun" has been a delightful journey that not only entertained
+but also enlightened me about a fascinating period in Japanese history. It's a
+testament to the power of storytelling when combined with exceptional
+cinematography and cultural immersion.
+
+In conclusion, "Shogun" is a must-watch for anyone seeking a captivating,
+visually stunning, and culturally enriching television experience. It's a
+breath of fresh air in an industry often inundated with familiar tropes,
+offering something truly unique and memorable.
+
+""",
+"""
+Having read everything James Clavell ever wrote including Shogun at least five
+times, and also being a huge fan of the 1980 mini-series starring Richard
+Chamberlain, Toshiro Mifune and Yoko Shimada, I eagerly awaited the airing of
+the new FX/Hulu adaptation of the novel. I confess to be being disappointed. I
+certainly didn’t expect the next version to be a mere remake on the 44 year-old
+classic, but I’d have thought that nearly half a century would have provided
+ample time for better costumes, better sets, better casting and a screenplay
+that takes fewer liberties in the telling of what is already a wonderful story.
+The characterizations in the remake are flat and largely boring. The sole cast
+member I feel does justice to the their role is Hiroyuki Sanada as Lord
+Toranaga.  Lastly, the love affair between Anjinsan and Mariko has zero heat
+and passion and is wholly unbelievable.  Maybe we’ll need to wait 44 years for
+someone to give this novel a new treatment worth watching again and again. This
+new one fails at that.
+""",
+]
+
+classy = pipeline(
+    "text-classification",
+    model="nlptown/bert-base-multilingual-uncased-sentiment")
+preds = [classy(review) for review in reviews]
+print(preds)
+
+```
+
+
+
