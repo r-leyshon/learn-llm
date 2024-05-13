@@ -13,6 +13,8 @@ Largely with Hugging Face's `transformers` package.
 
 ```{python}
 #| warning: false
+import requests
+from bs4 import BeautifulSoup
 from transformers import pipeline # relies on torch
 ```
 
@@ -83,5 +85,25 @@ print(preds)
 
 ```
 
+### Text Summarisation
 
+The t5 models are indicated to be good for this. Using the
+[hugging face model directory](https://huggingface.co/models) find a good match for the job you need.
+
+Let's get a summary of a page from my website:
+
+<iframe src="https://thedatasavvycorner.com/music-reviews/04-triads" width=800 height=450></iframe>
+
+```{python}
+#| warning: false
+# scrape the text
+resp = requests.get("https://thedatasavvycorner.com/music-reviews/04-triads")
+txt = resp.text
+soup = BeautifulSoup(txt, "html.parser")
+# Use a summarization model
+llm = pipeline(
+    "summarization", model="pszemraj/long-t5-tglobal-base-16384-book-summary")
+outputs = llm(soup.text, max_length=100)
+print(outputs[0]["summary_text"])
+```
 
