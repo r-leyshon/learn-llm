@@ -99,7 +99,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="orientation" class="level2">
 <h2 class="anchored" data-anchor-id="orientation">Orientation</h2>
 <p>Largely with Hugging Face’s <code>transformers</code> package.</p>
-<div id="5a5ba0ee" class="cell" data-execution_count="1">
+<div id="19545244" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> bs4 <span class="im">import</span> BeautifulSoup</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> pipeline <span class="co"># relies on torch</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 <p>I’ve recently been watching Shōgun on Disney+. Here are some Google reviews to attempt to classify, I included a 5 star and 1 star review respectively.</p>
-<div id="0c996ba4" class="cell" data-execution_count="2">
+<div id="a8c51f03" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>reviews <span class="op">=</span> [<span class="st">""""Shogun" is a captivating TV series that offers a refreshing and</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="st">unique storyline, making it a standout in today's television landscape. From</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="st">its inception, it immerses viewers in a world that is both historically rich</span></span>
@@ -180,7 +180,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Let’s get a summary of a page from my website:</p>
 <iframe src="https://thedatasavvycorner.com/music-reviews/04-triads" width="800" height="450">
 </iframe>
-<div id="d6265dd1" class="cell" data-execution_count="3">
+<div id="06e4018b" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># scrape the text</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>resp <span class="op">=</span> requests.get(<span class="st">"https://thedatasavvycorner.com/music-reviews/04-triads"</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>txt <span class="op">=</span> resp.text</span>
@@ -195,6 +195,69 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
+<section id="question-answering" class="level3">
+<h3 class="anchored" data-anchor-id="question-answering">Question-Answering</h3>
+<div id="118bdf8e" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>llm <span class="op">=</span> pipeline(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"question-answering"</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># model="deepset/roberta-base-squad2"</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>q <span class="op">=</span> <span class="st">"""What is the genre of this album?"""</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> llm(context<span class="op">=</span>soup.text, question<span class="op">=</span>q)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(response[<span class="st">"answer"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>synthwave</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="transformers" class="level2">
+<h2 class="anchored" data-anchor-id="transformers">Transformers</h2>
+<ul>
+<li>No RNNs</li>
+<li>Attention &amp; positional encoding</li>
+<li>Simultaneous processing of tokens</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/8/8f/The-Transformer-model-architecture.png" class="img-fluid figure-img"></p>
+<figcaption>transformer architecture on Wikipedia</figcaption>
+</figure>
+</div>
+<p>The encoder is the architecture to the left and the decoder is to the right of the image. Note that not all models use an encoder and decoder, dependant upon the tasks they are designed to perform.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>Task</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Encoder</td>
+<td>Classification, Extractive QA</td>
+<td>BERT</td>
+</tr>
+<tr class="even">
+<td>Decoder</td>
+<td>Text gen, Gen QA</td>
+<td>GPT</td>
+</tr>
+<tr class="odd">
+<td>Encoder-Decoder</td>
+<td>Translation, Summarisation</td>
+<td>BART, T5</td>
+</tr>
+</tbody>
+</table>
+<p>We can access transformer architecture through the <strong>pytorch</strong> package. The <code>torch.nn.Transformer</code> class takes the following parameters:</p>
+<ul>
+<li><code>d_model</code> = Number of dimensions in the model.</li>
+<li><code>nhead</code> = Number of attention heads. Usually a divisor of <code>d_model</code>.</li>
+<li><code>num_encoder_layers</code> = Depth of encoder.</li>
+<li><code>num_decoder_layers</code> = Depth of decoder.</li>
+</ul>
 </section>
 
 </main>
