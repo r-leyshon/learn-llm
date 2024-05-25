@@ -16,6 +16,8 @@ Largely with Hugging Face's `transformers` package.
 import requests
 from bs4 import BeautifulSoup
 from transformers import pipeline # relies on torch
+import torch
+
 ```
 
 ### Text Classification
@@ -121,7 +123,31 @@ print(response["answer"])
 
 ```
 
+### Translation
+
+```{python}
+anthem = """
+Mae hen wlad fy nhadau yn annwyl i mi
+Gwlad beirdd a chantorion, enwogion o fri
+Ei gwrol ryfelwyr, gwladgarwyr tra mâd
+Tros ryddid gollasant eu gwaed
+Gwlad, Gwlad, pleidiol wyf i'm gwlad
+Tra môr yn fur i'r bur hoff bau
+O bydded i'r heniaith barhau
+"""
+
+translator = pipeline(task="translation_CY_to_EN", model="Helsinki-NLP/opus-mt-cy-en")
+inenglish = translator(anthem)
+print(inenglish[0]["translation_text"])
+
+```
+
+Not quite right haha!
+
 ## Transformers
+
+{{< video https://vimeo.com/947964306 >}}
+
 
 * No RNNs
 * Attention & positional encoding
@@ -143,3 +169,17 @@ We can access transformer architecture through the **pytorch** package. The `tor
 * `nhead` = Number of attention heads. Usually a divisor of `d_model`.
 * `num_encoder_layers` = Depth of encoder.
 * `num_decoder_layers` = Depth of decoder.
+
+## Build a Transformer
+
+Using Pytorch.
+
+```{python}
+optimus = torch.nn.Transformer(
+    d_model=50,
+    nhead=5,
+    num_encoder_layers=3,
+    num_decoder_layers=3
+)
+print(optimus)
+```
