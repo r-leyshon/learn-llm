@@ -6,5 +6,6 @@ pyprojroot
 sacremoses # translation pipeline
 scikit-learn
 sentencepiece # translation pipeline
+toml
 torch
 transformers
