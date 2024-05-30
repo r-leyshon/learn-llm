@@ -1,11 +1,21 @@
+astrapy
 beautifulsoup4
+cassio
+datasets
+langchain
+langchain_astradb
+langchain_community
+langchain_core
+langchain_openai
 matplotlib
+openai
 nbclient # quarto render dependency
 nbformat # quarto render dependency
 pyprojroot
 sacremoses # translation pipeline
 scikit-learn
 sentencepiece # translation pipeline
+tiktoken
 toml
 torch
 transformers
