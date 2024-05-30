@@ -1,3 +1,4 @@
+.vscode
 .secrets.toml
 data
 # local conda env
