@@ -13,6 +13,8 @@ Largely with Hugging Face's `transformers` package.
 
 ```{python}
 #| warning: false
+import math
+
 import requests
 from bs4 import BeautifulSoup
 from transformers import pipeline # relies on torch
@@ -90,7 +92,8 @@ print(preds)
 ### Text Summarisation
 
 The t5 models are indicated to be good for this. Using the
-[hugging face model directory](https://huggingface.co/models) find a good match for the job you need.
+[hugging face model directory](https://huggingface.co/models) find a good match
+for the job you need.
 
 Let's get a summary of a page from my website:
 
@@ -155,7 +158,9 @@ Not quite right haha!
 
 ![transformer architecture on Wikipedia](https://upload.wikimedia.org/wikipedia/commons/8/8f/The-Transformer-model-architecture.png)
 
-The encoder is the architecture to the left and the decoder is to the right of the image. Note that not all models use an encoder and decoder, dependant upon the tasks they are designed to perform. 
+The encoder is the architecture to the left and the decoder is to the right of
+the image. Note that not all models use an encoder and decoder, dependant upon
+the tasks they are designed to perform. 
 
 | Model           | Task                          | Examples | 
 | --------------- | ----------------------------- | -------- |
@@ -163,7 +168,8 @@ The encoder is the architecture to the left and the decoder is to the right of t
 | Decoder         | Text gen, Gen QA              | GPT      |
 | Encoder-Decoder | Translation, Summarisation    | BART, T5 |
 
-We can access transformer architecture through the **pytorch** package. The `torch.nn.Transformer` class takes the following parameters:
+We can access transformer architecture through the **pytorch** package. The
+`torch.nn.Transformer` class takes the following parameters:
 
 * `d_model` = Number of dimensions in the model.
 * `nhead` = Number of attention heads. Usually a divisor of `d_model`.
@@ -182,4 +188,52 @@ optimus = torch.nn.Transformer(
     num_decoder_layers=3
 )
 print(optimus)
+```
+
+## Add Positional Encoding
+
+This makes models more effective. As transformers process tokens
+simultaneously, adding positional encoding adds sequence order into the models.
+
+Positional encoding gets added to embeddings. 
+
+Here, we subclass from the torch.nn module class like so:
+
+```{python}
+# Subclass an appropriate PyTorch class 
+class PositionalEncoder(torch.nn.Module):
+    def __init__(self, dim_mod: int, max_len: int) -> None:
+        super(PositionalEncoder, self).__init__()
+        self.dim_mod = dim_mod
+        self.max_len = max_len
+        
+        # Initialize positional encoding matrix for token positions in
+        # sequences up max_len
+        pe = torch.zeros(max_len, dim_mod)
+
+        pos = torch.arange(0, max_len, dtype=torch.float).unsqueeze(1)
+        div_term = torch.exp(
+            torch.arange(0, dim_mod, 2, dtype=torch.float) * -(math.log(10000.0) / dim_mod)
+            )
+        
+        # Assign unique position encodings to matrix by alternating sin & cos
+        pe[:, 0::2] = torch.sin(pos * div_term)
+        pe[:, 1::2] = torch.cos(pos * div_term)
+        pe = pe.unsqueeze(0)
+        self.register_buffer('pe', pe)
+    
+    # Update an embeddings tensor with positional encodings
+    def forward(self, x:torch.tensor) -> torch.tensor:
+        x = x + self.pe[:, :x.size(1)]
+        return x
+
+```
+
+
+```{python}
+some_tensor = torch.tensor([range(0, 10)])
+# v.brittle, if dim_mod does not match length of tensor, RuntimeError. Refactor to extract len from tensor...
+pos_encoder = PositionalEncoder(10, 2)
+pos_encoder.forward(some_tensor)
+
 ```
