@@ -195,7 +195,13 @@ print(optimus)
 This makes models more effective. As transformers process tokens
 simultaneously, adding positional encoding adds sequence order into the models.
 
-Positional encoding gets added to embeddings. 
+Positional encoding gets added to embeddings, stored in the form of pytorch
+tensors. Without this positional information, self-attention mechanisms will
+not work properly.
+
+For more on positional encoding, see [this tutorial](https://machinelearningmastery.com/a-gentle-introduction-to-positional-encoding-in-transformer-models-part-1/).
+
+![Positional encoding table](https://machinelearningmastery.com/wp-content/uploads/2022/01/PE3.png)
 
 Here, we subclass from the torch.nn module class like so:
 
@@ -213,7 +219,9 @@ class PositionalEncoder(torch.nn.Module):
 
         pos = torch.arange(0, max_len, dtype=torch.float).unsqueeze(1)
         div_term = torch.exp(
-            torch.arange(0, dim_mod, 2, dtype=torch.float) * -(math.log(10000.0) / dim_mod)
+            torch.arange(
+                0, dim_mod, 2, dtype=torch.float
+                ) * -(math.log(10000.0) / dim_mod)
             )
         
         # Assign unique position encodings to matrix by alternating sin & cos
@@ -232,8 +240,167 @@ class PositionalEncoder(torch.nn.Module):
 
 ```{python}
 some_tensor = torch.tensor([range(0, 10)])
-# v.brittle, if dim_mod does not match length of tensor, RuntimeError. Refactor to extract len from tensor...
+# v.brittle, if dim_mod does not match length of tensor, RuntimeError. Refactor
+# to extract len from tensor...
 pos_encoder = PositionalEncoder(10, 2)
 pos_encoder.forward(some_tensor)
+
+```
+
+## Attention
+
+```{python}
+
+class MultiHeadAttention(torch.nn.Module):
+    def __init__(self, dim_mod: int, n_heads:int) -> None:
+        super(MultiHeadAttention, self).__init__()
+        # Set the num of attention heads
+        self.n_heads = n_heads
+        self.dim_mod = dim_mod
+        self.head_dim = dim_mod // n_heads
+		# Set up the linear transformations
+        self.query_linear = torch.nn.Linear(dim_mod, dim_mod)
+        self.key_linear = torch.nn.Linear(dim_mod, dim_mod)
+        self.value_linear = torch.nn.Linear(dim_mod, dim_mod)
+        self.output_linear = torch.nn.Linear(dim_mod, dim_mod) # this will concat
+        # query, key and value 
+
+
+    def split_heads(self, x:torch.tensor, batch_size:int) -> torch.tensor:
+        # Split sequence embeddings across attention heads
+        x = x.view(batch_size, -1, self.n_heads, self.head_dim)
+        return x.permute(0, 2, 1, 3).contiguous().view(
+            batch_size * self.n_heads, -1, self.head_dim)
+
+
+    def compute_attention(self, query, key, mask=None):
+        # Compute dot-product (cosine similarity) attention scores
+        scores = torch.matmul(query, key.permute(1, 2, 0))
+        if mask is not None:
+            scores = scores.masked_fill(mask == 0, float("-1e20"))
+        # Normalize attention scores into attention weights
+        attention_weights = torch.nn.functional.softmax(scores, dim=-1)
+        return attention_weights
+
+
+    def forward(self, query, key, value, mask=None):
+        batch_size = query.size(0)
+
+        query = self.split_heads(self.query_linear(query), batch_size)
+        key = self.split_heads(self.key_linear(key), batch_size)
+        value = self.split_heads(self.value_linear(value), batch_size)
+
+        attention_weights = self.compute_attention(query, key, mask)
+            
+        # Multiply attention weights by values, concatenate and linearly
+        # project outputs
+        output = torch.matmul(attention_weights, value)
+        output = output.view(
+            batch_size, self.n_heads, -1, self.head_dim
+            ).permute(0, 2, 1, 3).contiguous().view(
+                batch_size, -1, self.dim_mod)
+        return self.output_linear(output)
+
+
+```
+
+## Build an Encoder
+
+```{python}
+class FeedForwardSubLayer(torch.nn.Module):
+    # Specify the two linear layers' input and output sizes
+    def __init__(self, dim_mod, d_ff):
+        super(FeedForwardSubLayer, self).__init__()
+        self.fc1 = torch.nn.Linear(dim_mod, d_ff)
+        self.fc2 = torch.nn.Linear(d_ff, dim_mod)
+        self.relu = torch.nn.ReLU()
+
+	# Apply a forward pass
+    def forward(self, x):
+        return self.fc2(self.relu(self.fc1(x)))
+
+```
+
+
+```{python}
+class EncoderLayer(torch.nn.Module):
+    def __init__(self, dim_mod, n_heads, d_ff, dropout):
+        super(EncoderLayer, self).__init__()
+        self.self_attn = MultiHeadAttention(dim_mod, n_heads)
+        self.feed_forward = FeedForwardSubLayer(dim_mod, d_ff)
+        self.norm1 = torch.nn.LayerNorm(dim_mod)
+        self.norm2 = torch.nn.LayerNorm(dim_mod)
+        self.dropout = torch.nn.Dropout(dropout)
+
+    def forward(self, x, mask):
+        attn_output = self.self_attn(x, x, x, mask)
+        x = self.norm1(x + self.dropout(attn_output))
+        ff_output = self.feed_forward(x)
+        return self.norm2(x + self.dropout(ff_output))
+
+```
+
+```{python}
+class TransformerEncoder(torch.nn.Module):
+    def __init__(self, vocab_size, dim_mod, num_layers, n_heads, d_ff, dropout, max_sequence_length):
+        super(TransformerEncoder, self).__init__()
+        self.embedding = torch.nn.Embedding(vocab_size, dim_mod)
+        self.positional_encoding = PositionalEncoder(dim_mod, max_sequence_length)
+        # Define a stack of multiple encoder layers
+        self.layers = torch.nn.ModuleList([EncoderLayer(dim_mod, n_heads, d_ff, dropout) for _ in range(num_layers)])
+	
+    # Complete the forward pass method
+    def forward(self, x, mask):
+        x = self.embedding(x)
+        x = self.positional_encoding(x)
+        for layer in self.layers:
+            x = layer(x, mask)
+        return x
+
+class ClassifierHead(torch.nn.Module):
+    def __init__(self, dim_mod, num_classes):
+        super(ClassifierHead, self).__init__()
+        # Add linear layer for multiple-class classification
+        self.fc = torch.nn.Linear(dim_mod, num_classes)
+
+    def forward(self, x):
+        logits = self.fc(x[:, 0, :])
+        # Obtain log class probabilities upon raw outputs
+        return torch.nn.functional.log_softmax(logits, dim=-1)
+
+```
+
+### Test the Encoder Transformer
+
+This uses random masks, though in practice this mask should correspond to
+padding token locations originating from the text you are processing.
+
+```{python}
+num_classes = 3
+vocab_size = 10000
+batch_size = 8
+d_model = 512
+num_heads = 8
+num_layers = 6
+d_ff = 2048
+sequence_length = 64 # needs to be same size as tensor
+dropout = 0.1
+
+```
+
+
+```{python}
+input_sequence = torch.randint(0, vocab_size, (batch_size, sequence_length))
+mask = torch.randint(0, 2, (sequence_length, sequence_length))
+
+# Instantiate the encoder transformer's body and head
+encoder = TransformerEncoder(vocab_size, d_model, num_layers, num_heads, d_ff, dropout, max_sequence_length=sequence_length)
+classifier = ClassifierHead(d_model, num_classes)
+
+# Complete the forward pass 
+output = encoder.forward(input_sequence, mask)
+classification = classifier(output)
+print("Classification outputs for a batch of ", batch_size, "sequences:")
+print(classification)
 
 ```
