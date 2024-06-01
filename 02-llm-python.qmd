@@ -404,3 +404,74 @@ print("Classification outputs for a batch of ", batch_size, "sequences:")
 print(classification)
 
 ```
+
+## Build a Decoder
+
+In autoregressive LLMs like chatGPT, only a decoder Is used. The difference is
+the mask that is used, here it is referred to as a triangular mask, with a
+split of 1s and 0s on the diaganol. Each new token can only pay attention to
+previous tokens, hence 'predict the next word'.
+
+```{python}
+class TransformerDecoder(torch.nn.Module):
+    def __init__(
+        self,
+        vocab_size,
+        d_model,
+        num_layers,
+        num_heads,
+        d_ff,
+        dropout,
+        max_sequence_length):
+        super(TransformerDecoder, self).__init__()
+        self.embedding = torch.nn.Embedding(vocab_size, d_model)
+        self.positional_encoding = PositionalEncoder(
+            d_model, max_sequence_length)
+        self.layers = torch.nn.ModuleList(
+            [EncoderLayer(
+                d_model, num_heads, d_ff, dropout) for _ in range(num_layers)])
+
+        # Add a linear layer (head) for next-word prediction
+        self.fc = torch.nn.Linear(d_model, vocab_size)
+
+    def forward(self, x, self_mask):
+        x = self.embedding(x)
+        x = self.positional_encoding(x)
+        for layer in self.layers:
+            x = layer(x, self_mask)
+
+        # Apply the forward pass through the model head
+        x = self.fc(x)
+        return torch.nn.functional.log_softmax(x, dim=-1)
+```
+
+### Test the decoder
+
+```{python}
+num_classes = 3
+vocab_size = 10000
+batch_size = 8
+d_model = 512
+num_heads = 8
+num_layers = 6
+d_ff = 2048
+sequence_length = 64 # RunTimeError, must match tensor sizes
+dropout = 0.1
+input_sequence = torch.randint(0, vocab_size, (batch_size, sequence_length))
+# Create a triangular attention mask for causal attention
+self_attention_mask = (1 - torch.triu(
+    torch.ones(1, sequence_length, sequence_length), diagonal=1)).bool()
+print(self_attention_mask)
+
+```
+
+```{python}
+# Instantiate the decoder transformer
+decoder = TransformerDecoder(
+    vocab_size, d_model, num_layers, num_heads, d_ff, dropout,
+    max_sequence_length=sequence_length)
+output = decoder(input_sequence, self_attention_mask)
+print(output.shape)
+print(output)
+
+```

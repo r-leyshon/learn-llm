@@ -99,7 +99,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="orientation" class="level2">
 <h2 class="anchored" data-anchor-id="orientation">Orientation</h2>
 <p>Largely with Hugging Face’s <code>transformers</code> package.</p>
-<div id="6fe21958" class="cell" data-execution_count="1">
+<div id="fc221497" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
@@ -116,7 +116,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 <p>I’ve recently been watching Shōgun on Disney+. Here are some Google reviews to attempt to classify, I included a 5 star and 1 star review respectively.</p>
-<div id="6c30146e" class="cell" data-execution_count="2">
+<div id="789d1a02" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>reviews <span class="op">=</span> [<span class="st">""""Shogun" is a captivating TV series that offers a refreshing and</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="st">unique storyline, making it a standout in today's television landscape. From</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="st">its inception, it immerses viewers in a world that is both historically rich</span></span>
@@ -183,7 +183,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Let’s get a summary of a page from my website:</p>
 <iframe src="https://thedatasavvycorner.com/music-reviews/04-triads" width="800" height="450">
 </iframe>
-<div id="34ae8145" class="cell" data-execution_count="3">
+<div id="bc3a8906" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># scrape the text</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>resp <span class="op">=</span> requests.get(<span class="st">"https://thedatasavvycorner.com/music-reviews/04-triads"</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>txt <span class="op">=</span> resp.text</span>
@@ -200,7 +200,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="question-answering" class="level3">
 <h3 class="anchored" data-anchor-id="question-answering">Question-Answering</h3>
-<div id="a7e94050" class="cell" data-execution_count="4">
+<div id="40e9668b" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>llm <span class="op">=</span> pipeline(</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"question-answering"</span>,</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># model="deepset/roberta-base-squad2"</span></span>
@@ -215,7 +215,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="translation" class="level3">
 <h3 class="anchored" data-anchor-id="translation">Translation</h3>
-<div id="3f56e8bb" class="cell" data-execution_count="5">
+<div id="39f830dc" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>anthem <span class="op">=</span> <span class="st">"""</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="st">Mae hen wlad fy nhadau yn annwyl i mi</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="st">Gwlad beirdd a chantorion, enwogion o fri</span></span>
@@ -288,7 +288,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="build-a-transformer" class="level2">
 <h2 class="anchored" data-anchor-id="build-a-transformer">Build a Transformer</h2>
 <p>Using Pytorch.</p>
-<div id="c3ea7f6e" class="cell" data-execution_count="6">
+<div id="cfd0c1ac" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>optimus <span class="op">=</span> torch.nn.Transformer(</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    d_model<span class="op">=</span><span class="dv">50</span>,</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    nhead<span class="op">=</span><span class="dv">5</span>,</span>
@@ -357,7 +357,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 <p>Here, we subclass from the torch.nn module class like so:</p>
-<div id="c4f63618" class="cell" data-execution_count="7">
+<div id="f94bfbe8" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Subclass an appropriate PyTorch class </span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> PositionalEncoder(torch.nn.Module):</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim_mod: <span class="bu">int</span>, max_len: <span class="bu">int</span>) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
@@ -387,7 +387,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> x <span class="op">+</span> <span class="va">self</span>.pe[:, :x.size(<span class="dv">1</span>)]</span>
 <span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="14202299" class="cell" data-execution_count="8">
+<div id="13b0f631" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>some_tensor <span class="op">=</span> torch.tensor([<span class="bu">range</span>(<span class="dv">0</span>, <span class="dv">10</span>)])</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># v.brittle, if dim_mod does not match length of tensor, RuntimeError. Refactor</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># to extract len from tensor...</span></span>
@@ -403,7 +403,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="attention" class="level2">
 <h2 class="anchored" data-anchor-id="attention">Attention</h2>
-<div id="accb1bef" class="cell" data-execution_count="9">
+<div id="dd47de22" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MultiHeadAttention(torch.nn.Module):</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim_mod: <span class="bu">int</span>, n_heads:<span class="bu">int</span>) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>(MultiHeadAttention, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
@@ -457,7 +457,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="build-an-encoder" class="level2">
 <h2 class="anchored" data-anchor-id="build-an-encoder">Build an Encoder</h2>
-<div id="c471688a" class="cell" data-execution_count="10">
+<div id="ef51579c" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> FeedForwardSubLayer(torch.nn.Module):</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Specify the two linear layers' input and output sizes</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim_mod, d_ff):</span>
@@ -470,7 +470,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
 <span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.fc2(<span class="va">self</span>.relu(<span class="va">self</span>.fc1(x)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="f114743c" class="cell" data-execution_count="11">
+<div id="1cdf0248" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> EncoderLayer(torch.nn.Module):</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim_mod, n_heads, d_ff, dropout):</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>(EncoderLayer, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
@@ -486,7 +486,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>        ff_output <span class="op">=</span> <span class="va">self</span>.feed_forward(x)</span>
 <span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.norm2(x <span class="op">+</span> <span class="va">self</span>.dropout(ff_output))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="95819600" class="cell" data-execution_count="12">
+<div id="77cc8a70" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TransformerEncoder(torch.nn.Module):</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, vocab_size, dim_mod, num_layers, n_heads, d_ff, dropout, max_sequence_length):</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>(TransformerEncoder, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
@@ -517,7 +517,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="test-the-encoder-transformer" class="level3">
 <h3 class="anchored" data-anchor-id="test-the-encoder-transformer">Test the Encoder Transformer</h3>
 <p>This uses random masks, though in practice this mask should correspond to padding token locations originating from the text you are processing.</p>
-<div id="15da2ca9" class="cell" data-execution_count="13">
+<div id="0af22de4" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>num_classes <span class="op">=</span> <span class="dv">3</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>vocab_size <span class="op">=</span> <span class="dv">10000</span></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>batch_size <span class="op">=</span> <span class="dv">8</span></span>
@@ -528,7 +528,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>sequence_length <span class="op">=</span> <span class="dv">64</span> <span class="co"># needs to be same size as tensor</span></span>
 <span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>dropout <span class="op">=</span> <span class="fl">0.1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="97558a29" class="cell" data-execution_count="14">
+<div id="efca6a19" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>input_sequence <span class="op">=</span> torch.randint(<span class="dv">0</span>, vocab_size, (batch_size, sequence_length))</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>mask <span class="op">=</span> torch.randint(<span class="dv">0</span>, <span class="dv">2</span>, (sequence_length, sequence_length))</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -543,14 +543,140 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(classification)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Classification outputs for a batch of  8 sequences:
-tensor([[-0.8916, -1.6127, -0.9399],
-        [-2.0224, -0.9027, -0.7718],
-        [-1.9229, -1.9851, -0.3334],
-        [-0.7286, -1.1893, -1.5464],
-        [-1.3664, -1.9225, -0.5129],
-        [-0.8526, -0.8288, -1.9869],
-        [-0.8919, -1.0361, -1.4470],
-        [-1.5054, -0.6754, -1.3126]], grad_fn=&lt;LogSoftmaxBackward0&gt;)</code></pre>
+tensor([[-1.3191, -0.7173, -1.4083],
+        [-1.8783, -0.4456, -1.5765],
+        [-1.3980, -0.9288, -1.0275],
+        [-1.5438, -0.5002, -1.7146],
+        [-1.3327, -1.1491, -0.8691],
+        [-1.6080, -0.4960, -1.6569],
+        [-1.2892, -0.7044, -1.4692],
+        [-1.9949, -0.6282, -1.1074]], grad_fn=&lt;LogSoftmaxBackward0&gt;)</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="build-a-decoder" class="level2">
+<h2 class="anchored" data-anchor-id="build-a-decoder">Build a Decoder</h2>
+<p>In autoregressive LLMs like chatGPT, only a decoder Is used. The difference is the mask that is used, here it is referred to as a triangular mask, with a split of 1s and 0s on the diaganol. Each new token can only pay attention to previous tokens, hence ‘predict the next word’.</p>
+<div id="fe151a78" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TransformerDecoder(torch.nn.Module):</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>        vocab_size,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>        d_model,</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>        num_layers,</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>        num_heads,</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>        d_ff,</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>        dropout,</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>        max_sequence_length):</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>(TransformerDecoder, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.embedding <span class="op">=</span> torch.nn.Embedding(vocab_size, d_model)</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.positional_encoding <span class="op">=</span> PositionalEncoder(</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>            d_model, max_sequence_length)</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.layers <span class="op">=</span> torch.nn.ModuleList(</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>            [EncoderLayer(</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>                d_model, num_heads, d_ff, dropout) <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(num_layers)])</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Add a linear layer (head) for next-word prediction</span></span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.fc <span class="op">=</span> torch.nn.Linear(d_model, vocab_size)</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x, self_mask):</span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="va">self</span>.embedding(x)</span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="va">self</span>.positional_encoding(x)</span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> layer <span class="kw">in</span> <span class="va">self</span>.layers:</span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>            x <span class="op">=</span> layer(x, self_mask)</span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Apply the forward pass through the model head</span></span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="va">self</span>.fc(x)</span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> torch.nn.functional.log_softmax(x, dim<span class="op">=-</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="test-the-decoder" class="level3">
+<h3 class="anchored" data-anchor-id="test-the-decoder">Test the decoder</h3>
+<div id="8dcc1256" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>num_classes <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>vocab_size <span class="op">=</span> <span class="dv">10000</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>batch_size <span class="op">=</span> <span class="dv">8</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>d_model <span class="op">=</span> <span class="dv">512</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>num_heads <span class="op">=</span> <span class="dv">8</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>num_layers <span class="op">=</span> <span class="dv">6</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>d_ff <span class="op">=</span> <span class="dv">2048</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>sequence_length <span class="op">=</span> <span class="dv">64</span> <span class="co"># RunTimeError, must match tensor sizes</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>dropout <span class="op">=</span> <span class="fl">0.1</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>input_sequence <span class="op">=</span> torch.randint(<span class="dv">0</span>, vocab_size, (batch_size, sequence_length))</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a triangular attention mask for causal attention</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>self_attention_mask <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> torch.triu(</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>    torch.ones(<span class="dv">1</span>, sequence_length, sequence_length), diagonal<span class="op">=</span><span class="dv">1</span>)).<span class="bu">bool</span>()</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(self_attention_mask)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tensor([[[ True, False, False,  ..., False, False, False],
+         [ True,  True, False,  ..., False, False, False],
+         [ True,  True,  True,  ..., False, False, False],
+         ...,
+         [ True,  True,  True,  ...,  True, False, False],
+         [ True,  True,  True,  ...,  True,  True, False],
+         [ True,  True,  True,  ...,  True,  True,  True]]])</code></pre>
+</div>
+</div>
+<div id="29716e6d" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Instantiate the decoder transformer</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>decoder <span class="op">=</span> TransformerDecoder(</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    vocab_size, d_model, num_layers, num_heads, d_ff, dropout,</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    max_sequence_length<span class="op">=</span>sequence_length)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>output <span class="op">=</span> decoder(input_sequence, self_attention_mask)</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(output.shape)</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(output)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>torch.Size([8, 64, 10000])
+tensor([[[ -9.7407, -10.2035,  -9.8380,  ...,  -8.7820,  -9.2490,  -9.1215],
+         [ -9.5198,  -8.8925,  -8.9432,  ...,  -9.3127,  -9.5795,  -9.8292],
+         [ -9.5482,  -8.8636,  -8.7434,  ...,  -8.9390,  -9.2622,  -9.8216],
+         ...,
+         [ -9.1328,  -8.7219,  -9.1644,  ...,  -8.6113, -10.2239, -10.0840],
+         [ -8.2516,  -9.2444,  -9.3402,  ...,  -9.6664,  -9.9122,  -9.2476],
+         [ -8.7879,  -9.1500,  -9.6036,  ...,  -9.1696,  -9.8763,  -9.2026]],
+
+        [[ -8.9680,  -9.3691,  -9.1001,  ...,  -8.8844,  -9.0690, -11.0527],
+         [ -8.6033,  -9.5106,  -9.6689,  ...,  -9.6328,  -9.2363, -10.5695],
+         [ -9.6923,  -9.3713, -10.1359,  ...,  -8.6297,  -9.3011,  -9.9289],
+         ...,
+         [ -9.4437,  -9.9829,  -9.1841,  ...,  -9.0600,  -8.7077,  -9.3326],
+         [-10.4322,  -8.6736,  -8.9455,  ...,  -9.4926,  -8.9319,  -9.5633],
+         [ -8.8136,  -9.1827,  -9.6302,  ...,  -9.1138,  -9.0031,  -9.8739]],
+
+        [[-10.0244,  -9.6127,  -9.8677,  ...,  -8.7938,  -9.1075,  -8.8490],
+         [ -9.3679,  -9.3805,  -9.4871,  ...,  -8.2927,  -9.1398,  -9.6493],
+         [ -9.1182,  -9.9275,  -9.8829,  ...,  -8.4336,  -8.4317,  -9.3104],
+         ...,
+         [ -8.9604,  -9.8246,  -9.3293,  ...,  -9.5359,  -9.5037,  -9.8640],
+         [ -9.0780,  -9.5471,  -9.9553,  ...,  -9.1403,  -9.9788, -10.0933],
+         [ -8.2915,  -9.7128, -10.1421,  ...,  -9.7855,  -9.8150,  -9.5082]],
+
+        ...,
+
+        [[ -9.3140,  -9.4888, -10.0222,  ...,  -9.3420,  -9.9296, -10.0725],
+         [ -9.1285,  -9.3242,  -8.8725,  ...,  -8.8372,  -9.1898, -10.1295],
+         [ -9.9273,  -9.4730, -10.2540,  ...,  -8.9625,  -9.4152, -10.1589],
+         ...,
+         [ -9.6797,  -9.4885, -10.5343,  ...,  -9.4063,  -9.1481,  -9.7495],
+         [-10.0246,  -8.9429,  -9.4188,  ...,  -9.4333,  -8.9823,  -9.2639],
+         [-10.2446,  -8.9662,  -9.6792,  ...,  -9.1138,  -8.6363,  -9.6601]],
+
+        [[ -9.1607,  -9.6612,  -8.7382,  ..., -10.1225,  -8.9743,  -9.4050],
+         [ -8.9472,  -9.0477, -10.1083,  ...,  -9.4894,  -8.8503,  -9.6130],
+         [ -8.1296,  -8.7046,  -9.1291,  ..., -10.0243,  -9.2479,  -9.3306],
+         ...,
+         [ -9.4275,  -9.6743,  -9.7049,  ...,  -8.5164,  -9.4486,  -9.4685],
+         [ -9.2904,  -8.7406, -10.1789,  ...,  -9.1339,  -9.8364,  -9.4864],
+         [ -9.1630,  -9.5175,  -9.1858,  ...,  -8.9449,  -9.7477,  -9.9958]],
+
+        [[ -8.2324,  -9.7530,  -9.3193,  ...,  -9.1628,  -9.0791,  -9.2459],
+         [ -8.6531,  -9.3139,  -9.4914,  ...,  -9.6680, -10.1934,  -9.2622],
+         [ -9.2844,  -9.2471,  -9.0923,  ...,  -9.1697,  -9.2018,  -9.9166],
+         ...,
+         [ -8.5787,  -9.4515,  -9.4305,  ...,  -9.0976,  -9.6270,  -9.9189],
+         [-10.0913,  -8.9227,  -9.9020,  ...,  -9.5274,  -8.9425, -10.6955],
+         [ -9.2991,  -9.4980,  -8.9976,  ...,  -8.8659,  -9.3272, -10.6073]]],
+       grad_fn=&lt;LogSoftmaxBackward0&gt;)</code></pre>
 </div>
 </div>
 </section>
