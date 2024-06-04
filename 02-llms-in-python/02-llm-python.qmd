@@ -435,6 +435,7 @@ class TransformerDecoder(torch.nn.Module):
         self.fc = torch.nn.Linear(d_model, vocab_size)
 
     def forward(self, x, self_mask):
+        #  self, x, self_mask, 
         x = self.embedding(x)
         x = self.positional_encoding(x)
         for layer in self.layers:
@@ -475,3 +476,4 @@ print(output.shape)
 print(output)
 
 ```
+
