@@ -1,0 +1,8 @@
+---
+title: LLMs in Python
+jupyter: 
+  kernelspec:
+    name: "conda-env-llm-env-py"
+    language: "python"
+    display_name: "llm-env"
+---
