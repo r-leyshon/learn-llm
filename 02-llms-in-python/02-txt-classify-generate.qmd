@@ -1,8 +1,98 @@
 ---
-title: LLMs in Python
+title: Using Pre-Trained LLMs
 jupyter: 
   kernelspec:
     name: "conda-env-llm-env-py"
     language: "python"
     display_name: "llm-env"
 ---
+
+The 2 approaches in langchain are to use `pipeline` and `AutoModel` approaches.
+
+`pipeline` abstracts more away than `AutoModel`. `AutoModel` gives you more
+control over tokenization and model selection and is suitable for a broader
+range of language tasks.
+
+## Using `AutoModel` to Classify
+
+```{python}
+from transformers import AutoTokenizer, AutoModelForSequenceClassification, AutoModelForCausalLM
+import torch
+from datasets import load_dataset
+
+```
+
+```{python}
+model_nm = "textattack/distilbert-base-uncased-SST-2"
+
+# Load the tokenizer and pre-trained model
+tokenizer = AutoTokenizer.from_pretrained(model_nm)
+model = AutoModelForSequenceClassification.from_pretrained(
+  model_nm, num_labels=2)
+
+text = ["A masterpiece movie. Essential viewing.", "90 minutes of my life I'll never get back."]
+
+# Tokenize inputs and pass them to the model for inference
+inputs = tokenizer(text, return_tensors="pt", padding=True)
+# type is  transformers.tokenization_utils_base.BatchEncoding
+# inputs["input_ids"]
+# tensor([[  101,  1037, 17743,  3185,  1012,  6827, 10523,  1012,   102,     0,
+#              0,     0,     0,     0],
+#         [  101,  3938,  2781,  1997,  2026,  2166,  1045,  1005,  2222,  2196,
+#           2131,  2067,  1012,   102]])
+# inputs["attention_mask"]
+# tensor([[  101,  1037, 17743,  3185,  1012,  6827, 10523,  1012,   102,     0,
+#              0,     0,     0,     0],
+#         [  101,  3938,  2781,  1997,  2026,  2166,  1045,  1005,  2222,  2196,
+#           2131,  2067,  1012,   102]])
+
+outputs = model(**inputs)
+# SequenceClassifierOutput(loss=None, logits=tensor([[-0.8427,  0.7898],
+#         [ 0.4062, -0.4545]], grad_fn=<AddmmBackward0>), hidden_states=None, attentions=None)
+logits = outputs.logits
+# tensor([[-0.8427,  0.7898],
+#         [ 0.4062, -0.4545]], grad_fn=<AddmmBackward0>)
+```
+
+```{python}
+pred_classes = torch.argmax(logits, dim=1).tolist()
+# [1, 0]
+for idx, class_ in enumerate(pred_classes):
+    print(f"Predicted class for \"{text[idx]}\": {class_}")
+```
+
+## Using `AutoModel` for Sequence Generation
+
+```{python}
+prompt = """
+Say your prayers, little one
+Don't forget, my son
+To include everyone
+I tuck you in, warm within
+Keep you free from sin
+'Til the Sandman, he comes
+
+"""
+
+```
+
+```{python}
+model_nm = "gpt2"
+tokenizer = AutoTokenizer.from_pretrained(model_nm)
+model = AutoModelForCausalLM.from_pretrained(model_nm)
+inputs = tokenizer.encode(prompt, return_tensors="pt")
+output = model.generate(inputs, max_length=100)
+out_text = tokenizer.decode(output[0], skip_special_tokens=True)
+print(out_text[len(prompt):])
+
+# I'll take you to the moon
+# And I'll take you to the stars
+# And I'll take you to the stars
+# And I'll take you to the stars
+# And I'll...
+
+# wow...
+
+```
+
+
