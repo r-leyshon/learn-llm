@@ -16,7 +16,7 @@ range of language tasks.
 ## Using `AutoModel` to Classify
 
 ```{python}
-from transformers import AutoTokenizer, AutoModelForSequenceClassification, AutoModelForCausalLM
+from transformers import AutoTokenizer, AutoModelForSequenceClassification, AutoModelForCausalLM, AutoModelForSeq2SeqLM
 import torch
 from datasets import load_dataset
 
@@ -95,4 +95,87 @@ print(out_text[len(prompt):])
 
 ```
 
+## Summarisation
 
+Training relies on a corpus of documents that have already been summarised (the labels).
+
+### Extractive Summarisation
+
+* Uses encoder models (BERT) or encoder:decoder models (T5)
+* Detects the portions of the text responsible for meaning and uses them in an abridged summary.
+
+### Abstractive Summarisation
+
+* Uses sequence to sequence LLMs
+* Creates output based on input prompt word by word, may use completely different language.
+
+
+```{python}
+articles = load_dataset("ILSUM/ILSUM-1.0", "English")
+articles = articles["train"]
+```
+
+
+```{python}
+articles[0]["Article"]
+
+```
+
+```{python}
+articles[0]["Summary"]
+
+```
+
+```{python}
+model_nm = "t5-small"
+tokenizer = AutoTokenizer.from_pretrained(model_nm)
+model = AutoModelForSeq2SeqLM.from_pretrained(model_nm)
+# at this point, we should add our prompt to the tokenizer's encode method
+# return_tensors="pt" ensures we get pytorch tensors back
+input_ids = tokenizer.encode("summarise the following text: " + articles[0]["Article"], return_tensors="pt", max_length=500, truncation=True)
+# lets generate the summary
+summary_ids = model.generate(input_ids, max_length=100)
+output = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
+output
+
+```
+
+
+
+```{python}
+opinosis = load_dataset("opinosis")
+model_nm = "t5-small"
+tokenizer = AutoTokenizer.from_pretrained(model_nm)
+model = AutoModelForSeq2SeqLM.from_pretrained(model_nm)
+example = opinosis['train'][-1]['review_sents']
+input_ids = tokenizer.encode("summarize: " + example, return_tensors="pt", max_length=512, truncation=True)
+summary_ids = model.generate(input_ids, max_length=150)
+summary = tokenizer.decode(
+  summary_ids[0], skip_special_tokens=True)
+summary
+# This is pretty good, though be careful as the text in the last index of this dataset contains several reviews of a Garmin satnav with differing opinions...
+
+```
+
+## Translation
+
+Trained with a corpus of articles in the source language and labels in the target language. Encoder:Decoder models are required for this job.
+
+
+```{python}
+model_name = "Helsinki-NLP/opus-mt-en-es"
+
+# Load the tokenizer and model checkpoint
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+
+english_inputs = ["What would you like to know?", "My mother", "Where am I?", "Which way to the beach?", "See you next week!"]
+
+# Encode inputs, generate translations, decode, and print
+for english_input in english_inputs:
+    input_ids = tokenizer.encode(english_input, return_tensors="pt")
+    translated_ids = model.generate(input_ids)
+    translated_text = tokenizer.decode(translated_ids[0], skip_special_tokens=True)
+    print(f"English: {english_input} | Spanish: {translated_text}")
+
+```
