@@ -16,7 +16,7 @@ range of language tasks.
 ## Using `AutoModel` to Classify
 
 ```{python}
-from transformers import AutoTokenizer, AutoModelForSequenceClassification, AutoModelForCausalLM, AutoModelForSeq2SeqLM
+from transformers import AutoTokenizer, AutoModelForSequenceClassification, AutoModelForCausalLM, AutoModelForSeq2SeqLM, AutoModelForQuestionAnswering
 import torch
 from datasets import load_dataset
 
@@ -177,5 +177,133 @@ for english_input in english_inputs:
     translated_ids = model.generate(input_ids)
     translated_text = tokenizer.decode(translated_ids[0], skip_special_tokens=True)
     print(f"English: {english_input} | Spanish: {translated_text}")
+
+```
+
+
+## Question Answering
+
+3 main forms:
+
+1. Extractive
+2. Open Generative
+3. Closed Generative
+
+| Method            | Architecture    | Approach |
+| ----------------- | --------------- | -------- |
+| Extractive        | Encoder         | Finds the answer directly in the text |
+| Open Generative   | Encoder:Decoder | Produces its own answer but based\nupon a document context |
+| Closed Generative | Decoder         | The answer is generated from the\nmodels own comprehension only |
+
+
+
+
+```{python}
+qa_data = load_dataset("xtreme", name="MLQA.en.en")
+
+
+```
+
+```{python}
+qa_data["test"][0]
+# 'question': 'Who analyzed the biopsies?',
+# 'answers': {'answer_start': [457],
+#   'text': ['Rutgers University biochemists']
+qa_data["test"][0]["context"][457:500]
+# Task is therefore a supervised classification
+```
+
+```{python}
+mod_checkpoint = "deepset/minilm-uncased-squad2"
+# this is already fine-tuned on the squad dataset
+tokenizer = AutoTokenizer.from_pretrained(mod_checkpoint)
+Q = "Which organisations were being sued?"
+inputs = tokenizer(Q, qa_data["test"][0]["context"], return_tensors="pt")
+
+```
+
+Checking `inputs.keys()` yields:
+
+dict_keys(['input_ids', 'token_type_ids', 'attention_mask'])
+
+'input_ids': tensor([[  101,  2040,  2020,  2108, 12923,  1029,   102,  1999,  2807,  1010,...
+
+'token_type_ids': tensor([[0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+'attention_mask': tensor([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+
+```{python}
+model = AutoModelForQuestionAnswering.from_pretrained(mod_checkpoint)
+
+with torch.no_grad():
+  outputs = model(**inputs)
+# odict_keys(['start_logits', 'end_logits'])
+
+```
+
+```{python}
+start_id = torch.argmax(outputs.start_logits) # find max likelihood for start ID
+end_id = torch.argmax(outputs.end_logits) + 1 # ensure last token is included
+print(f"Answer indices are {start_id}:{end_id}")
+
+```
+
+```{python}
+# return answer by chopping up the input IDs with the produced indexes
+answer_ids = inputs["input_ids"][0][start_id:end_id]
+response = tokenizer.decode(answer_ids)
+response
+# Produces the wrong answer!!
+# 'five unnamed civilian contractors and the widows of contractors walter kasza and robert frost'
+# These are the complainants
+```
+
+
+### Context Window
+
+If the context is longer than the context window, we can adapt the tokenizer to chunk the context.
+
+```{python}
+# Find the largest context in the data
+max_id = ""
+max_len = 0
+for i in qa_data["test"]:
+  if len(i["context"]) > max_len:
+    max_id = i["id"]
+    max_len = len(i["context"])
+
+print(f'{max_id}: {max_len} words')
+
+```
+
+```{python}
+for i in qa_data["test"]:
+  if max_id == i["id"]:
+    longest_example = i
+longest_example
+# It's about Kiss (the band)
+#  'question': 'What final name was settled on as a stage name?',
+#  'answers': {'answer_start': [8253], 'text': ['Vinnie Vincent']}}
+```
+
+To chunk the context window up, we use `return_overflowing_tokens` with a max length and stride.
+
+```{python}
+long_tokens = tokenizer(longest_example["question"], longest_example["context"], return_overflowing_tokens=True, max_length=100, stride=25)
+
+for i, window in enumerate(long_tokens["input_ids"]):
+  print(f"Window {i} has {len(window)} tokens")
+# Window 35 has 100 tokens
+# Window 36 has 100 tokens
+# Window 37 has 85 tokens
+```
+
+Final window will tend to be shorter unless the length of the context window modulo max_length == 0. For further context you can decode each window.
+
+```{python}
+for window in long_tokens["input_ids"]:
+  print(tokenizer.decode(window).split("[SEP]")[1])
+  
+# roving window with following pattern
+# [CLS] <QUESTION> [SEP] <ROVING_CONTEXT_WINDOW> [SEP]
 
 ```
