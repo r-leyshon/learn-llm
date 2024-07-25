@@ -1,21 +1,29 @@
 astrapy
 beautifulsoup4
 cassio
+chromadb # the AI-native open-source embedding database
+Cython # Cython is an optimising static compiler for both the Python programming language
 datasets
 langchain
 langchain_astradb
 langchain_community
 langchain_core
 langchain_openai
+layoutparser[layoutmodels,tesseract] # A Unified Toolkit for Deep Learning Based Document Image Analysis
 matplotlib
 openai
 nbclient # quarto render dependency
 nbformat # quarto render dependency
+Pillow==9.0.0 # The Python Imaging Library adds image processing capabilities to your Python interpreter. Need this version, otherwise errors occur.
+pybind11 # pybind11 is a lightweight header-only library that exposes C++ types in Python
 pyprojroot
+pytesseract # Python-tesseract is an optical character recognition (OCR) tool for python.
 sacremoses # translation pipeline
 scikit-learn
 sentencepiece # translation pipeline
+shiny
 tiktoken
 toml
 torch
 transformers
+unstructured[local-inference] # The unstructured library provides open-source components for pre-processing text documents such as PDFs, HTML and Word Documents. 
