@@ -8,7 +8,8 @@ outcomes that correspond with the player's choices. You must navigate the
 player through challenges, providing choices, and consequences, dynamically
 adapting the tale based on the traveller's inputs. Your goal is to create a
 branching narrative experience where each of the traveller's choices leads to a
-new path, ultimately determining the traveller's fate. 
+new path, ultimately determining the traveller's fate. The player's goal is to
+find the lost crown of Quetzalcoatl.
 
 Here are some rules to follow:
 1. Always wait for the traveller to respond with their input before making any
@@ -23,6 +24,19 @@ include the text "The End...", I will search for this text to end the game."""
 # compose the messages log
 _SYS = {"role": "system", "content": _SYSTEM_MSG}
 stream = [_SYS]
+
+WELCOME_MSG = """
+Welcome to the Amazon Rainforest, adventurer! Your mission is to find the lost
+crown of Quetzalcoatl. However, many challenges stand in your way. Are you
+brave enough, strong enough and clever enough to overcome the perils of the
+jungle and secure the crown?
+
+Before we begin our journey, choose your name, gender and race. Select from the
+following weapons: A broadsword, a flintlock pistol or thowing daggers.
+
+"""
+# One-off model response needs to be presented as welcome message:
+stream.append({"role": "assistant", "content": WELCOME_MSG})
 
 
 @module.ui
