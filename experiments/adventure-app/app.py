@@ -68,7 +68,6 @@ def server(input, output, session):
         model_response = f"You said: {user}"
         await chat.append_message(model_response)
         stream.append({"role": "assistant", "content": model_response})
-        print(stream)
 
 
 app = App(app_ui, server)
