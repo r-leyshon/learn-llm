@@ -5,7 +5,6 @@ _SYSTEM_MSG = """SYSTEM PROMPT"""
 # compose the messages log
 _SYS = {"role": "system", "content": _SYSTEM_MSG}
 stream = [_SYS]
-model_resp = "PLACEHOLDER"
 
 
 @module.ui
