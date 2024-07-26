@@ -68,7 +68,7 @@ def chat_module_ui(input_label:str, button_label:str) -> Tag:
         ui.input_action_button(id="update_messages", label=button_label),
         ),
         ui.card(
-            ui.output_text("messages")
+            ui.chat_ui("messages")
         ),
     )
 
