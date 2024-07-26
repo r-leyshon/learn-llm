@@ -1,4 +1,8 @@
-from shiny import App, ui
+import time
+
+import openai
+from openai import OpenAIError
+from shiny import App, ui, reactive
 
 _SYSTEM_MSG = """
 You are the guide of a 'choose your own adventure'- style game: a mystical
@@ -45,10 +49,10 @@ welcome = ui.markdown(
     WELCOME_MSG
 )
 
+
 # ui: user interface
 app_ui = ui.page_fillable(
     ui.panel_title("Choose Your Own Adventure: Amazon Adventure!"),
-
     ui.accordion(
     ui.accordion_panel("Step 1: Your OpenAI API Key",
         ui.input_text(id="key_input", label="Enter your openai api key"),
@@ -60,11 +64,10 @@ app_ui = ui.page_fillable(
     fillable_mobile=True,
 )
 
-
 # server: code logic
 def server(input, output, session):
-    chat = ui.Chat(id="chat", messages=[welcome])
 
+    chat = ui.Chat(id="chat", messages=[welcome])
     # Define a callback to run when the user submits a message
     @chat.on_user_submit
     async def _():
@@ -73,9 +76,21 @@ def server(input, output, session):
         #  update the stream list
         stream.append({"role": "user", "content": user})
         # Append a response to the chat
-        model_response = f"You said: {user}"
+        client = openai.OpenAI(api_key=input.key_input())
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=stream
+            )
+        model_response = response.choices[0].message.content
         await chat.append_message(model_response)
-        stream.append({"role": "assistant", "content": model_response})
+        if "the end..." in model_response.lower():
+            await chat.append_message({"role": "assistant", "content": "Game Over! Refresh the page to play again."})
+            # chat.destroy()
+            # time.sleep(2)
+            exit()
+        else:
+            stream.append({"role": "assistant", "content": model_response})
+
 
 
 app = App(app_ui, server)
