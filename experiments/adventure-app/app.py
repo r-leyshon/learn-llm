@@ -1,4 +1,5 @@
 from shiny import App, render, ui, reactive
+from modules import chat_module_ui, chat_module_server
 
 
 SYSTEM_MSG = """SYSTEM PROMPT"""
@@ -6,32 +7,18 @@ SYSTEM_MSG = """SYSTEM PROMPT"""
 stream = [{"role": "system", "content": SYSTEM_MSG}]
 
 # UI-----------------------------------------------
-app_ui = ui.page_sidebar(
-    ui.sidebar(
-        ui.input_text_area(
-            id="usr_input", label="Type your response", spellcheck=True
-            ),
-        ui.input_action_button(id="update_messages", label="Click to send"),
-    ),
-    ui.output_text("messages"),
+app_ui = ui.page_fluid(
+    chat_module_ui(
+        "chat_namespace",
+        input_label="Type something",
+        button_label="Send message"
+        )
     )
 
 # SERVER-----------------------------------------------
 
 
 def server(input, output, session):
-
-
-    @render.text
-    @reactive.event(input.update_messages)
-    def messages():
-        stream.append({"role": "user", "content": input.usr_input()})
-        stream.append({"role": "assistant", "content": response_placeholder()})
-        return str(stream)
-
-
-    @reactive.event(input.update_messages)
-    def response_placeholder():
-        return f"model response to ({input.usr_input()[0:5]})"
+    chat_module_server("chat_namespace")
 
 app = App(app_ui, server)
