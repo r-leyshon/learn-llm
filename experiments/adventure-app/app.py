@@ -48,6 +48,14 @@ welcome = ui.markdown(
 # ui: user interface
 app_ui = ui.page_fillable(
     ui.panel_title("Choose Your Own Adventure: Amazon Adventure!"),
+
+    ui.accordion(
+    ui.accordion_panel("Step 1: Your OpenAI API Key",
+        ui.input_text(id="key_input", label="Enter your openai api key"),
+        ui.markdown("**Note:** The app does not store your key when the session ends."),
+        ui.markdown("Using openai api costs money. Please monitor your account fees."),
+    ), id="acc", multiple=False,
+    ),
     ui.chat_ui("chat"),
     fillable_mobile=True,
 )
