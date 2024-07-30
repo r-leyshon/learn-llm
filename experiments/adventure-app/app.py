@@ -1,23 +1,31 @@
+from pathlib import Path
+
 from faicons import icon_svg
 import openai
 from openai import OpenAIError
 from shiny import App, ui, reactive
+from shinyswatch import theme
+
+import os
+
+
 
 _SYSTEM_MSG = """
 You are the guide of a 'choose your own adventure'- style game: a mystical
 journey through the Amazon Rainforest. Your job is to create compelling
 outcomes that correspond with the player's choices. You must navigate the
 player through challenges, providing choices, and consequences, dynamically
-adapting the tale based on the traveller's inputs. Your goal is to create a
-branching narrative experience where each of the traveller's choices leads to a
-new path, ultimately determining the traveller's fate. The player's goal is to
-find the lost crown of Quetzalcoatl.
+adapting the tale based on the player's inputs. Your goal is to create a
+branching narrative experience where each of the player's choices leads to a
+new path, ultimately determining their fate. The player's goal is to find the
+lost crown of Quetzalcoatl.
 
 Here are some rules to follow:
-1. Always wait for the traveller to respond with their input before making any
+1. Always wait for the player to respond with their input before providing any
 choices. Never provide the player's input yourself. This is most important.
 2. Ask the player to provide a name, gender and race.
-3. Ask the player to choose some weapons that will be used later in the game.
+3. Ask the player to choose from a selection of weapons that will be used later
+in the game.
 4. Have a few paths that lead to success. 
 5. Have some paths that lead to death.
 6. Whether or not the game results in success or death, the response must
@@ -34,8 +42,8 @@ Crown of Quetzalcoatl:\n
 However, many challenges stand in your way. Are you brave enough, strong enough
 and clever enough to overcome the perils of the jungle and secure the crown?
 
-Before we begin our journey, choose your name, gender and race. Select from the
-following weapons: A broadsword, a flintlock pistol or thowing daggers.
+Before we begin our journey, choose your name, gender and race. Choose a weapon
+to bring with you. Choose wisely, as the way ahead is filled with many dangers.
 
 """
 # compose the messages log
@@ -48,8 +56,22 @@ welcome = ui.markdown(
     WELCOME_MSG
 )
 
+
 # ui --------------------------------------------------------------------------
 app_ui = ui.page_fillable(
+
+    ui.panel_absolute(
+        ui.div(ui.p("Powered by"), style="float:left;"),
+        ui.div(
+            ui.img(src="openai.png", width="60rem"),
+            style="float:left;padding-left:0.2rem;"
+            ),
+        ui.div(ui.p(f"Made with "), style="float: left;padding-left:0.2rem"),
+        ui.div(ui.img(src="https://shiny.posit.co/py/shiny-for-python.svg"), style="float:left;padding-left:0.2rem;"),
+    ),
+        
+    ui.br(),
+    ui.br(),
     ui.panel_title("Choose Your Own Adventure: Jungle Quest!"),
     ui.accordion(
     ui.accordion_panel("Step 1: Your OpenAI API Key",
@@ -67,15 +89,14 @@ app_ui = ui.page_fillable(
     ), 
     ui.div(
         ui.div(ui.h6("Step 2: Choose your adventure"), style="float:left;"),
-        ui.div(icon_svg("dungeon", a11y="decorative", position="absolute"), style="float:left;padding-left:0.5rem;"),
+        ui.div(icon_svg("dungeon", a11y="decorative", position="absolute"), style="float:left;padding-left:0.2rem;"),
     ),
-        ui.chat_ui("chat", fillable_mobile=True,),
+        ui.chat_ui("chat"),
+        theme=theme.darkly,
 
-
-
-
-    
+        fillable_mobile=True,
 )
+
 
 # server ----------------------------------------------------------------------
 def server(input, output, session):
@@ -106,4 +127,5 @@ def server(input, output, session):
             stream.append({"role": "assistant", "content": model_response})
 
 
-app = App(app_ui, server)
+app_dir = Path(__file__).parent
+app = App(app_ui, server, static_assets=app_dir / "www")
