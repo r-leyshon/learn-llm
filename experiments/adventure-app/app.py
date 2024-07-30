@@ -64,12 +64,12 @@ app_ui = ui.page_fillable(
             style="float:left;padding-left:0.2rem;"
             ),
         ui.div(ui.p(f", made with "), style="float: left;padding-left:0.2rem"),
-        ui.div(ui.img(src="https://shiny.posit.co/py/shiny-for-python.svg"), style="float:left;padding-left:0.2rem;"),
+        ui.img(src="/shiny-for-python.svg", width="100rem", style="padding-left:0.2rem;padding-top:0.2rem;float:left;"),
     ),
     ui.br(),
     ui.div(
         ui.panel_title("Choose Your Own Adventure: Jungle Quest!"),
-        style="padding-top:1rem;"
+        style="padding-top:2rem;"
         ),
     ui.accordion(
     ui.accordion_panel("Step 1: Your OpenAI API Key",
