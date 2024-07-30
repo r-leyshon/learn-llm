@@ -57,20 +57,16 @@ welcome = ui.markdown(
 # ui --------------------------------------------------------------------------
 app_ui = ui.page_fillable(
 
-    ui.panel_absolute(
+    ui.div(
         ui.div(ui.p("Powered by"), style="float:left;"),
         ui.div(
             ui.img(src="openai.png", width="60rem"),
             style="float:left;padding-left:0.2rem;"
             ),
         ui.div(ui.p(f", made with "), style="float: left;padding-left:0.2rem"),
-        ui.img(src="/shiny-for-python.svg", width="100rem", style="padding-left:0.2rem;padding-top:0.2rem;float:left;"),
+        ui.img(src="shiny-for-python.svg", width="100rem", style="padding-left:0.2rem;padding-top:0.2rem;float:left;"),
     ),
-    ui.br(),
-    ui.div(
-        ui.panel_title("Choose Your Own Adventure: Jungle Quest!"),
-        style="padding-top:2rem;"
-        ),
+    ui.panel_title("Choose Your Own Adventure: Jungle Quest!"),
     ui.accordion(
     ui.accordion_panel("Step 1: Your OpenAI API Key",
         ui.div(
