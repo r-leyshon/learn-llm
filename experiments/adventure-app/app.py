@@ -6,9 +6,6 @@ from openai import OpenAIError
 from shiny import App, ui, reactive
 from shinyswatch import theme
 
-import os
-
-
 
 _SYSTEM_MSG = """
 You are the guide of a 'choose your own adventure'- style game: a mystical
@@ -66,13 +63,14 @@ app_ui = ui.page_fillable(
             ui.img(src="openai.png", width="60rem"),
             style="float:left;padding-left:0.2rem;"
             ),
-        ui.div(ui.p(f"Made with "), style="float: left;padding-left:0.2rem"),
+        ui.div(ui.p(f", made with "), style="float: left;padding-left:0.2rem"),
         ui.div(ui.img(src="https://shiny.posit.co/py/shiny-for-python.svg"), style="float:left;padding-left:0.2rem;"),
     ),
-        
     ui.br(),
-    ui.br(),
-    ui.panel_title("Choose Your Own Adventure: Jungle Quest!"),
+    ui.div(
+        ui.panel_title("Choose Your Own Adventure: Jungle Quest!"),
+        style="padding-top:1rem;"
+        ),
     ui.accordion(
     ui.accordion_panel("Step 1: Your OpenAI API Key",
         ui.div(
