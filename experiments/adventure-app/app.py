@@ -1,5 +1,4 @@
-import time
-
+from faicons import icon_svg
 import openai
 from openai import OpenAIError
 from shiny import App, ui, reactive
@@ -49,22 +48,36 @@ welcome = ui.markdown(
     WELCOME_MSG
 )
 
-
-# ui: user interface
+# ui --------------------------------------------------------------------------
 app_ui = ui.page_fillable(
-    ui.panel_title("Choose Your Own Adventure: Amazon Adventure!"),
+    ui.panel_title("Choose Your Own Adventure: Jungle Quest!"),
     ui.accordion(
     ui.accordion_panel("Step 1: Your OpenAI API Key",
+        ui.div(
+            icon_svg("key", a11y="decorative", position="absolute"),
+                style="float:left;padding-left:12.2rem;"),
         ui.input_text(id="key_input", label="Enter your openai api key"),
-        ui.markdown("**Note:** The app does not store your key when the session ends."),
-        ui.markdown("Using openai api costs money. Please monitor your account fees."),
-    ), id="acc", multiple=False,
+        ui.markdown(
+            "**Note:** The app does not store your key when the session ends."
+            ),
+        ui.p(
+            "Using openai api costs money. Please monitor your account fees."),
+        ui.markdown("To get an API key, follow to [OpenAI API Sign Up](https://openai.com/index/openai-api/)"),
+    ), id="acc", multiple=False, icon=str(icon_svg("key")),
+    ), 
+    ui.div(
+        ui.div(ui.h6("Step 2: Choose your adventure"), style="float:left;"),
+        ui.div(icon_svg("dungeon", a11y="decorative", position="absolute"), style="float:left;padding-left:0.5rem;"),
     ),
-    ui.chat_ui("chat"),
-    fillable_mobile=True,
+        ui.chat_ui("chat", fillable_mobile=True,),
+
+
+
+
+    
 )
 
-# server: code logic
+# server ----------------------------------------------------------------------
 def server(input, output, session):
 
     chat = ui.Chat(id="chat", messages=[welcome])
@@ -84,13 +97,13 @@ def server(input, output, session):
         model_response = response.choices[0].message.content
         await chat.append_message(model_response)
         if "the end..." in model_response.lower():
-            await chat.append_message({"role": "assistant", "content": "Game Over! Refresh the page to play again."})
-            # chat.destroy()
-            # time.sleep(2)
+            await chat.append_message(
+                {"role": "assistant",
+                "content": "Game Over! Refresh the page to play again."}
+                )
             exit()
         else:
             stream.append({"role": "assistant", "content": model_response})
-
 
 
 app = App(app_ui, server)
